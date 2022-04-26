@@ -1,37 +1,33 @@
-import { useQuery } from "react-query";
-import axios from "axios";
-
-const fetchStudent = () => {
-  return axios.get("http://localhost:4000/students");
-};
+import { useStudentData } from "../hooks/useStudentData";
 
 export const RQStudent = () => {
-  const { isLoading, data, isError, error } = useQuery("student", fetchStudent);
-  //data.data 해야하는게 싫다
-  //주기적으로 실행되는데, 컨트롤할 수 있는 방법을 찾아봐야 할 듯
+  const onSuccess = (data) => {
+    console.log("데이터 패칭 성공, ", "data: ", data);
+  };
+
+  const onError = (error) => {
+    console.log("데이터 패칭 에러, ", "error: ", error);
+  };
+
+  const { isLoading, data, isError, error, isFetching, refetch } =
+    useStudentData(onSuccess, onError);
+
+  console.log("isLoading: ", isLoading, "isFetching", isFetching);
 
   if (isError) {
     return <div>{error.message}</div>;
   }
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="rq-student">
-      {data.data.length && (
-        <ul>
-          {data.data.map((item, index) => (
-            <div key={index}>
-              <div>{item.id}</div>
-              <div>{item.name}</div>
-              <div>{item.age}</div>
-              <br />
-            </div>
-          ))}
-        </ul>
-      )}
+      <button onClick={refetch}>Fetch Studens</button>
+      {data.map((name) => {
+        return <div key={name}>{name}</div>;
+      })}
     </div>
   );
 };
