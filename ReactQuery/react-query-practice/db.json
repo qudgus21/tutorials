@@ -1,7 +1,7 @@
 {
     "students": [
         {
-            "id": 300,
+            "id": 1,
             "name": "병현",
             "age": 100
         },
@@ -14,6 +14,23 @@
             "id": 3,
             "name": "준호",
             "age": 300
+        }
+    ],
+    "users": [
+        {
+            "id": "test@gmail.com",
+            "channelId": "testId"
+        }
+    ],
+    "channels": [
+        {
+            "id": "testId",
+            "courses": ["react","vue","angular"]
+        }
+    ],
+    "friends": [
+        {
+            "test": 100
         }
     ]
 }
