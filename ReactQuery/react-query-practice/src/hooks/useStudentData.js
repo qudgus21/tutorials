@@ -1,13 +1,15 @@
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 
 const fetchStudent = () => {
   return axios.get("http://localhost:4000/students");
 };
 
-export const useStudentData = (onSuccess, onError) => {
+export const useStudentData = (studentId) => {
+  const queryClient = useQueryClient();
+
   return useQuery(
-    "student",
+    ["student", studentId],
     fetchStudent,
     //basic use
     // {
@@ -29,10 +31,22 @@ export const useStudentData = (onSuccess, onError) => {
     // }
     //serializer
     {
-      onSuccess,
-      onError,
       select: (data) => {
         return data.data.map((student) => student.name);
+      },
+      initialData: () => {
+        //caching
+        const student = queryClient
+          .getQueryData("student")
+          ?.data?.find((student = student.id === parseInt(studentId)));
+
+        if (student) {
+          return {
+            data: student,
+          };
+        } else {
+          return undefined;
+        }
       },
     }
   );
